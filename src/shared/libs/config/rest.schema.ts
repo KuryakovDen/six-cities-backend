@@ -27,7 +27,7 @@ export const configRestSchema = convict<RestSchema>({
     doc: 'Port for express-server connections',
     format: 'port',
     env: 'SERVER_PORT',
-    default: 2500,
+    default: 4000,
   },
   DB_HOST: {
     doc: 'IP address of the database server (MongoDB)',
