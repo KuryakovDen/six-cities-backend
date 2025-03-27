@@ -6,7 +6,7 @@ import { OfferService } from './offer-service.interface.js';
 import { HttpMethod } from '../../types/http-method.enum.js';
 import { fillDTO } from '../../helpers/fillDTO.js';
 import { OfferRdo } from './rdo/offer.rdo.js';
-import { Request, Response } from 'express'; // Убедитесь, что импортированы правильные типы
+import { Request, Response } from 'express';
 
 export class OfferController extends BaseController {
   constructor(
