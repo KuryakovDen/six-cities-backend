@@ -4,7 +4,9 @@ import {UserEntity} from './user.entity.js';
 import {inject, injectable} from 'inversify';
 import {Component} from '../../types/component.enum.js';
 import {Logger} from '../../libs/logger/logger.interface.js';
-import {types} from '@typegoose/typegoose';
+import {DocumentType, types} from '@typegoose/typegoose';
+import {HttpError} from '../../libs/rest/errors/http-error.js';
+import {StatusCodes} from 'http-status-codes';
 
 @injectable()
 export class DefaultUserService implements UserService {
@@ -24,16 +26,23 @@ export class DefaultUserService implements UserService {
   }
 
   public async findByEmail(email: string) {
-    return this.userModel.findOne({email}).exec();
+    const user = await this.userModel.findOne({ email });
+    if (!user) {
+      throw new HttpError(StatusCodes.NOT_FOUND, `User with email ${email} not found`);
+    }
+    return user as DocumentType<UserEntity>;
   }
 
   public async findOrCreate(dto: CreateUserDto, salt: string) {
-    const existedUser = await this.findByEmail(dto.email);
+    try {
+      const existedUser = await this.findByEmail(dto.email);
+      if (existedUser) {
+        return existedUser;
+      }
 
-    if (existedUser) {
-      return existedUser;
+      return this.create(dto, salt);
+    } catch (error) {
+      throw new HttpError(StatusCodes.INTERNAL_SERVER_ERROR, 'Internal Server Error');
     }
-
-    return this.create(dto, salt);
   }
 }

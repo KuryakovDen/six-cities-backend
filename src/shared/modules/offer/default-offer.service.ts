@@ -5,7 +5,6 @@ import {Component} from '../../types/component.enum.js';
 import {Logger} from '../../libs/logger/logger.interface.js';
 import {types} from '@typegoose/typegoose';
 import {OfferEntity} from './offer.entity.js';
-import {CityWithCoordinates} from '../../types/offer.type.js';
 
 @injectable()
 export class DefaultOfferService implements OfferService {
@@ -67,9 +66,9 @@ export class DefaultOfferService implements OfferService {
       .exec();
   }
 
-  public async findPremiumOfferList(city: CityWithCoordinates) {
+  public async findPremiumOfferList(cityId: string) {
     return this.offerModel
-      .find({ city, isPremium: true })
+      .find({ cityId, isPremium: true })
       .populate(['userId']);
   }
 
