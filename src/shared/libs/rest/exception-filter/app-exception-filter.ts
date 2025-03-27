@@ -15,9 +15,9 @@ export class AppExceptionFilter implements ExceptionFilter {
 
   private handleHttpError(
     error: HttpError,
-    req: Request,
+    _req: Request,
     res: Response,
-    next: NextFunction
+    _next: NextFunction
   ) {
     this.logger.error(`[${error.detail}]: ${error.httpStatusCode} — ${error.message}`, error);
 
@@ -28,9 +28,9 @@ export class AppExceptionFilter implements ExceptionFilter {
 
   private handleOtherError(
     error: Error,
-    req: Request,
+    _req: Request,
     res: Response,
-    next: NextFunction
+    _next: NextFunction
   ) {
     this.logger.error(error.message, error);
 
@@ -39,7 +39,7 @@ export class AppExceptionFilter implements ExceptionFilter {
       .json(createErrorObject(error.message));
   }
 
-  public catch(error: Error, req: Request, res: Response, next: NextFunction) {
+  public catch(error: Error | HttpError, req: Request, res: Response, next: NextFunction) {
     if (error instanceof HttpError) {
       this.handleHttpError(error, req, res, next);
       return;
